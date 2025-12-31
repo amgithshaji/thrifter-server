@@ -8,5 +8,9 @@ const router = new express.Router()
 // define path of client api request
 // register
 router.post('/register',userController.registerController)
+// login
+router.post('/login',userController.logincontroller)
+
+
 
 module.exports = router
