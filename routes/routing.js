@@ -10,6 +10,8 @@ const router = new express.Router()
 router.post('/register',userController.registerController)
 // login
 router.post('/login',userController.logincontroller)
+// login
+router.post('/google/sign-in',userController.googleLoginController)
 
 
 
