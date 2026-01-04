@@ -15,7 +15,7 @@ const clothSchema = new mongoose.Schema({
         required:true
     },
       productid:{
-        type:Number,
+        type:String,
         required:true
     },
       clothdetails:{
@@ -64,5 +64,5 @@ const clothSchema = new mongoose.Schema({
     },
 })
 
-const clothes=mongoose.model("clothes",clothSchema)
-module.exports= clothes
+const clothes = mongoose.model("clothes",clothSchema)
+module.exports = clothes

@@ -3,6 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const router = require('./routes/routing')
 require('./config/db')
+// const path = require('path');
+
 
 // create server using express
 const thrifterserver = express()
@@ -11,8 +13,11 @@ thrifterserver.use(cors())
 // add json parser to server
 thrifterserver.use(express.json())
 // create a port where server should listen in web
+
 // use router in server
 thrifterserver.use(router)
+// enable static file
+thrifterserver.use('/uploads',express.static('./uploads'))
 const PORT = 3000
 
 // server listen to that port
