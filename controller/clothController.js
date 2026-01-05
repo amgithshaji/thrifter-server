@@ -63,3 +63,4 @@ res.status(200).json(clothDetails)
     res.status(500).json(error)   
 }
 }
+

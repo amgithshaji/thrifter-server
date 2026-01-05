@@ -4,7 +4,7 @@ const userController = require('../controller/userController')
 const clothController = require('../controller/clothController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerMiddleware = require('../middlewares/multerMiddleware')
-
+const storeController = require('../controller/storeController')
 
 // create router object
 const router = new express.Router()
@@ -18,14 +18,16 @@ router.post('/google/sign-in',userController.googleLoginController)
 
 //------------------- authorised user------------------------
 
-// add book
+// add cloth
 router.post('/user/clothes/add',jwtMiddleware,multerMiddleware.array('uploadimages',7),clothController.addClothController)
-// get all books
+// get all clothes
 router.get('/clothes/all',jwtMiddleware,clothController.getUserAllClothController)
 // view cloth
 router.get('/cloth/:id/view',jwtMiddleware,clothController.viewClothController)
-
-
+// add store
+router.post('/user/store/add',jwtMiddleware,multerMiddleware.array('uploadimages',4),storeController.addStoreController)
+// get store
+router.get('/seller/:sellermail/details',jwtMiddleware,storeController.getStoreDetialsController)
 
 
 module.exports = router
