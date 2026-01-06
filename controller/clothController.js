@@ -31,14 +31,18 @@ try {
 }
 
 // get all clothes - user
-exports.getUserAllClothController = async (req,res)=>{
+ exports.getUserAllClothController = async (req,res)=>{
     console.log("inside getUserAllClothController");
+    // get query from req
+    const searchKey = req.query.search
+    console.log(searchKey);
+    
 
     // get login user mail from token
     const loginUsermail = req.payload
 
 try {
-    const allCloth = await clothes.find({sellermail:{$ne:loginUsermail}})
+    const allCloth = await clothes.find({sellermail:{$ne:loginUsermail},clothname:{$regex:searchKey,$options:'i'}})
     res.status(200).json(allCloth)
     
 }catch(error){
