@@ -64,3 +64,19 @@ res.status(200).json(clothDetails)
 }
 }
 
+// get cloth in cloth detials
+
+exports.clothdetailsViewcontroller = async(req,res)=>{
+    console.log("inside clothdetailsViewcontroller");
+    // get id from req
+  const {id} = req.params
+  try{
+    const clothDetailsView = await clothes.find({_id:{$ne:id}})
+    res.status(200).json(clothDetailsView)
+
+  }catch(error){
+    console.log(error);
+    res.status(500).json(error) 
+  }
+    
+}

@@ -1,4 +1,6 @@
  const stores = require('../models/storeModel')
+ const clothes = require('../models/clothModel')
+ 
 
 // add store
 exports.addStoreController = async (req,res)=>{
@@ -41,10 +43,21 @@ exports.getStoreDetialsController = async (req,res)=>{
     } catch(error){
         console.log(error);
         res.status(500).json(error)
-        
-        
     }
-    
-    
+}
 
+// get store clothes
+
+exports.getStoreClothesController = async (req,res)=>{
+    console.log("inside getStoreClothesController ");
+    //    get seller from req
+    const {sellermail} = req.params
+    const storeclothes = await clothes.find({sellermail:sellermail})
+    res.status(200).json(storeclothes)
+    try {
+        
+    } catch(error){
+        console.log(error);
+        res.status(500).json(error)
+    }
 }

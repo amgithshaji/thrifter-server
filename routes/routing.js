@@ -28,6 +28,10 @@ router.get('/cloth/:id/view',jwtMiddleware,clothController.viewClothController)
 router.post('/user/store/add',jwtMiddleware,multerMiddleware.array('uploadimages',4),storeController.addStoreController)
 // get store
 router.get('/seller/:sellermail/details',jwtMiddleware,storeController.getStoreDetialsController)
+// get store clothes
+router.get('/seller/:sellermail/clothes',jwtMiddleware,storeController.getStoreClothesController)
+// get store in cloth details
+router.get('/clothdetails/:id/view',jwtMiddleware,clothController.clothdetailsViewcontroller)
 
 
 module.exports = router
