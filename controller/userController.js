@@ -140,7 +140,7 @@ exports.addToWishlistController = async (req, res) => {
     res.status(200).json("Product added to wishlist")
 
   } catch (error) {
-    res.status(401).json(error)
+    res.status(500).json(error)
   }
 }
 
