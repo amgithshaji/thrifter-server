@@ -1,5 +1,6 @@
 const clothes = require('../models/clothModel')
 
+
 // add clothes
 exports.addClothController = async (req,res)=>{
 console.log("inside addClothController ");

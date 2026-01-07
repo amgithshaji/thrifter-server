@@ -5,6 +5,7 @@ const clothController = require('../controller/clothController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerMiddleware = require('../middlewares/multerMiddleware')
 const storeController = require('../controller/storeController')
+ 
 
 // create router object
 const router = new express.Router()
@@ -32,6 +33,12 @@ router.get('/seller/:sellermail/details',jwtMiddleware,storeController.getStoreD
 router.get('/seller/:sellermail/clothes',jwtMiddleware,storeController.getStoreClothesController)
 // get store in cloth details
 router.get('/clothdetails/:id/view',jwtMiddleware,clothController.clothdetailsViewcontroller)
+// add to wishlist
+router.post('/wishlist/add', jwtMiddleware,userController.addToWishlistController)
+// get wishlist
+router.get('/wishlist', jwtMiddleware, userController.getWishlistController)
+// delete wishlist item
+router.delete('/wishlist/:clothId/delete', jwtMiddleware,userController.removeFromWishlistController)
 
 
 module.exports = router

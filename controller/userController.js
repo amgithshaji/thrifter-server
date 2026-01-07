@@ -1,4 +1,5 @@
 const users = require('../models/userModel')
+const wishlists = require('../models/wishlistModel')
 const jwt = require('jsonwebtoken')
 
 
@@ -89,3 +90,78 @@ exports.registerController = async (req,res)=>{
     }
     
  }
+
+ 
+// get wishlist
+exports.getWishlistController = async (req, res) => {
+  console.log("inside getWishlistController");
+  
+      const userMail = req.payload
+      console.log(userMail);
+      
+  try {
+
+    const wishlistItems = await wishlists
+      .find({ userMail })
+      .populate("clothId")
+
+    res.status(200).json(wishlistItems)
+
+  } catch (error) {
+    res.status(401).json(error)
+    console.log(error);
+    
+  }
+}
+
+// add wishlist
+exports.addToWishlistController = async (req, res) => {
+  console.log(" inside addToWishlistController");
+      const userMail = req.payload
+      // console.log(userMail);
+      
+    const { clothId } = req.body
+
+  
+  try {
+
+    // prevent duplicate wishlist items
+    const exists = await wishlists.findOne({ userMail,clothId })
+    if (exists) {
+      return res.status(200).json("Product already in wishlist")
+    }
+
+    const newWishlist = new wishlists({
+      userMail,
+      clothId
+    })
+
+    await newWishlist.save()
+    res.status(200).json("Product added to wishlist")
+
+  } catch (error) {
+    res.status(401).json(error)
+  }
+}
+
+// remove wishlist
+exports.removeFromWishlistController = async (req, res) => {
+  console.log("inside removeFromWishlistController")
+
+  const userMail = req.payload   
+  const { clothId } = req.params
+
+
+
+  try {
+    const result = await wishlists.deleteOne({ userMail, clothId })
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json("Item not found in wishlist")
+    }
+
+    res.status(200).json("Product removed from wishlist")
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
