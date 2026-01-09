@@ -5,6 +5,7 @@ const clothController = require('../controller/clothController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerMiddleware = require('../middlewares/multerMiddleware')
 const storeController = require('../controller/storeController')
+const cartController = require('../controller/cartController')
  
 
 // create router object
@@ -39,6 +40,14 @@ router.post('/wishlist/add', jwtMiddleware,userController.addToWishlistControlle
 router.get('/wishlist', jwtMiddleware, userController.getWishlistController)
 // delete wishlist item
 router.delete('/wishlist/:clothId/delete', jwtMiddleware,userController.removeFromWishlistController)
+// add to cart
+router.post('/cart/add', jwtMiddleware, cartController.addToCartController)
+// get cart items
+router.get('/cart', jwtMiddleware, cartController.getCartController)
+// remove cart item
+router.delete('/cart/:clothId/delete', jwtMiddleware, cartController.removeFromCartController)
+// decrease cart item
+router.put('/cart/decrease/:clothId', jwtMiddleware, cartController.decreaseCartQuantityController)
 
 
 module.exports = router
