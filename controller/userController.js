@@ -165,3 +165,25 @@ exports.removeFromWishlistController = async (req, res) => {
     res.status(500).json(error)
   }
 }
+// update profile
+exports.updateUserProfileController = async (req,res)=>{
+  console.log("inside updateUserProfileController");
+  const{id}= req.params
+  const email = req.payload
+  const{username,password}=req.body
+  console.log(username,password);
+  try {
+    const updateUser = await users.findByIdAndUpdate({_id:id},{username,email,password},{new:true})
+    res.status(200).json(updateUser)
+    
+  } catch(error){
+    console.log(error);
+    res.status(500).json(error)
+    
+    
+  }
+
+  
+  
+
+}

@@ -48,6 +48,9 @@ router.get('/cart', jwtMiddleware, cartController.getCartController)
 router.delete('/cart/:clothId/delete', jwtMiddleware, cartController.removeFromCartController)
 // decrease cart item
 router.put('/cart/decrease/:clothId', jwtMiddleware, cartController.decreaseCartQuantityController)
+// update user profile
+ router.put('/user/:id/edit',jwtMiddleware,userController.updateUserProfileController)
+
 
 
 module.exports = router
