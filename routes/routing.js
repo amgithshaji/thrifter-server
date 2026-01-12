@@ -50,7 +50,10 @@ router.delete('/cart/:clothId/delete', jwtMiddleware, cartController.removeFromC
 router.put('/cart/decrease/:clothId', jwtMiddleware, cartController.decreaseCartQuantityController)
 // update user profile
  router.put('/user/:id/edit',jwtMiddleware,userController.updateUserProfileController)
-
+// get user upload cloth
+router.get('/user-cloth/all',jwtMiddleware,clothController.getuserUploadprofileClothController)
+// delete book
+router.delete('/cloth/:id',jwtMiddleware,clothController.deleteClothController)
 
 
 module.exports = router

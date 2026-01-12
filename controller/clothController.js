@@ -85,3 +85,37 @@ exports.clothdetailsViewcontroller = async(req,res)=>{
   }
     
 }
+
+// get user uploaded cloth in the profile
+exports.getuserUploadprofileClothController = async (req,res)=>{
+console.log("getuserUploadprofileClothController");
+// get login user mail from token
+const loginUsermail = req.payload
+  try {
+    //get books from db that is uploaded just by this loginded user
+    const UserCloth = await clothes.find({sellermail:loginUsermail})
+    res.status(200).json(UserCloth) 
+  } catch(error){
+    console.log(error);
+    res.status(500).json(error)  
+  }
+
+}
+
+// delete user book 
+exports.deleteClothController = async (req,res)=>{
+  console.log("inside deleteClothController");
+  // get _id of the book
+  const{id} = req.params
+  try {
+    // get  books details from db
+    const clothDetails = await clothes.findByIdAndDelete({_id:id})
+  
+    res.status(200).json(clothDetails)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error)
+    
+  }
+}
+
