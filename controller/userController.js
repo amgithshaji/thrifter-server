@@ -93,26 +93,57 @@ exports.registerController = async (req,res)=>{
 
  
 // get wishlist
-exports.getWishlistController = async (req, res) => {
-  console.log("inside getWishlistController");
+// exports.getWishlistController = async (req, res) => {
+//   console.log("inside getWishlistController");
   
-      const userMail = req.payload
-      console.log(userMail);
+//       const userMail = req.payload
+//       console.log(userMail);
       
-  try {
+//   try {
 
-    const wishlistItems = await wishlists
+//     const wishlistItems = await wishlists
+//       .find({ userMail })
+//       .populate("clothId")
+
+//     res.status(200).json(wishlistItems)
+
+//   } catch (error) {
+//     res.status(401).json(error)
+//     console.log(error);
+    
+//   }
+// }
+
+// get wishlist (SELF-HEALING)
+exports.getWishlistController = async (req, res) => {
+  console.log("inside getWishlistController")
+
+  const userMail = req.payload
+
+  try {
+    let wishlistItems = await wishlists
       .find({ userMail })
       .populate("clothId")
 
-    res.status(200).json(wishlistItems)
+    //  remove deleted products
+    const validItems = wishlistItems.filter(item => item.clothId !== null)
+
+    // delete invalid wishlist docs from DB
+    const invalidItems = wishlistItems.filter(item => item.clothId === null)
+
+    if (invalidItems.length > 0) {
+      const invalidIds = invalidItems.map(item => item._id)
+      await wishlists.deleteMany({ _id: { $in: invalidIds } })
+    }
+
+    res.status(200).json(validItems)
 
   } catch (error) {
-    res.status(401).json(error)
-    console.log(error);
-    
+    console.log(error)
+    res.status(500).json(error)
   }
 }
+
 
 // add wishlist
 exports.addToWishlistController = async (req, res) => {

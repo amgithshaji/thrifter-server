@@ -34,23 +34,54 @@ exports.addToCartController = async (req, res) => {
 }
 
 // get cart
+// exports.getCartController = async (req, res) => {
+//   console.log("inside getCartController")
+
+//   const userMail = req.payload
+
+//   try {
+//     const cartItems = await carts
+//       .find({ userMail })
+//       .populate("clothId")
+
+//     res.status(200).json(cartItems)
+
+//   } catch (error) {
+//     console.log(error)
+//     res.status(500).json(error)
+//   }
+// }
+
+
 exports.getCartController = async (req, res) => {
   console.log("inside getCartController")
 
   const userMail = req.payload
 
   try {
-    const cartItems = await carts
+    let cartItems = await carts
       .find({ userMail })
       .populate("clothId")
 
-    res.status(200).json(cartItems)
+    //  deleted products from cart
+    const validCartItems = cartItems.filter(item => item.clothId !== null)
+
+    // delete invalid cart entries from DB
+    const invalidItems = cartItems.filter(item => item.clothId === null)
+
+    if (invalidItems.length > 0) {
+      const invalidIds = invalidItems.map(item => item._id)
+      await carts.deleteMany({ _id: { $in: invalidIds } })
+    }
+
+    res.status(200).json(validCartItems)
 
   } catch (error) {
     console.log(error)
     res.status(500).json(error)
   }
 }
+
 
 // remove cart
 exports.removeFromCartController = async (req, res) => {
