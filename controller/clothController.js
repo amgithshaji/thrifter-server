@@ -119,3 +119,22 @@ exports.deleteClothController = async (req,res)=>{
   }
 }
 
+// get my order in profile
+
+exports.getMyOrderCloth = async (req,res)=>{
+  console.log("inside getMyOrderCloth ");
+  const loginUserMail = req.payload
+  try {
+
+    const myOrderClothes = await clothes.find({buyermail:loginUserMail})
+    res.status(200).json(myOrderClothes)
+    
+  } catch(error){
+    console.log(error);
+    res.status(500).json(error)
+    
+  }
+  
+
+}
+

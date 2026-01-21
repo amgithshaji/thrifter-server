@@ -54,6 +54,7 @@ router.put('/cart/decrease/:clothId', jwtMiddleware, cartController.decreaseCart
 router.get('/user-cloth/all',jwtMiddleware,clothController.getuserUploadprofileClothController)
 // delete book
 router.delete('/cloth/:id',jwtMiddleware,clothController.deleteClothController)
-
+// get my order cloth
+router.get('/my-order/cloth',jwtMiddleware,clothController.getMyOrderCloth)
 
 module.exports = router
