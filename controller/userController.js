@@ -209,12 +209,20 @@ exports.updateUserProfileController = async (req,res)=>{
     
   } catch(error){
     console.log(error);
-    res.status(500).json(error)
-    
-    
+    res.status(500).json(error) 
   }
-
-  
-  
-
 }
+
+// get all users only  : admin login user
+exports.getAllUsersController = async (req, res) => {
+  console.log("inside getAllUsersController");
+  try {
+    // get all users with role = 'user'
+    const allUsers = await users.find({ role: "user" });
+
+    res.status(200).json(allUsers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};

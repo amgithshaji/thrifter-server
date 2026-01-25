@@ -6,6 +6,7 @@ const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerMiddleware = require('../middlewares/multerMiddleware')
 const storeController = require('../controller/storeController')
 const cartController = require('../controller/cartController')
+const adminMiddleware = require('../middlewares/adminMiddleware')
  
 
 // create router object
@@ -56,5 +57,17 @@ router.get('/user-cloth/all',jwtMiddleware,clothController.getuserUploadprofileC
 router.delete('/cloth/:id',jwtMiddleware,clothController.deleteClothController)
 // get my order cloth
 router.get('/my-order/cloth',jwtMiddleware,clothController.getMyOrderCloth)
+
+//------------------- authorised admin------------------------
+
+// get all clothes admin
+router.get('/admin-clothes/all',adminMiddleware,clothController.getAllClothController)
+// update cloth status
+router.put('/cloths/:id/update',adminMiddleware,clothController.updateClothStatusBooksController)
+// get all stores admin
+router.get('/admin-stores/all',adminMiddleware,storeController.getAllStoreController)
+// get all user to admin page
+router.get('/admin-user/all',adminMiddleware,userController.getAllUsersController)
+
 
 module.exports = router

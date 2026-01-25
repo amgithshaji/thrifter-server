@@ -61,3 +61,19 @@ exports.getStoreClothesController = async (req,res)=>{
         res.status(500).json(error)
     }
 }
+
+
+// get all store - admin
+ exports.getAllStoreController = async (req,res)=>{
+    console.log("inside getAllStoreController");
+  
+
+try {
+    const allStore = await stores.find()
+    res.status(200).json(allStore)
+    
+}catch(error){
+    console.log(error);
+    res.status(500).json(error)
+}
+}

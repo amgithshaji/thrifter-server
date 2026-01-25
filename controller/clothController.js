@@ -138,3 +138,37 @@ exports.getMyOrderCloth = async (req,res)=>{
 
 }
 
+// get all clothes - admin
+ exports.getAllClothController = async (req,res)=>{
+    console.log("inside getAllClothController");
+  
+
+try {
+    const allCloth = await clothes.find()
+    res.status(200).json(allCloth)
+    
+}catch(error){
+    console.log(error);
+    res.status(500).json(error)
+}
+}
+
+// update book status  - admin: login user
+
+exports.updateClothStatusBooksController = async (req,res)=>{
+  console.log("inside updateClothStatusBooksController");
+  // get _id of the book
+  const{id} = req.params
+  try {
+    // get  clothes details from db
+    const clothDetails = await clothes.findById({_id:id})
+    clothDetails.status = "approved"
+    // save changes to mongodb
+    await clothDetails.save()
+    res.status(200).json(clothDetails)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error)
+    
+  }
+}
