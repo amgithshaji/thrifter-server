@@ -57,6 +57,10 @@ router.get('/user-cloth/all',jwtMiddleware,clothController.getuserUploadprofileC
 router.delete('/cloth/:id',jwtMiddleware,clothController.deleteClothController)
 // get my order cloth
 router.get('/my-order/cloth',jwtMiddleware,clothController.getMyOrderCloth)
+// make payment
+router.post('/checkout', jwtMiddleware, clothController.cartCheckoutController)
+
+
 
 //------------------- authorised admin------------------------
 

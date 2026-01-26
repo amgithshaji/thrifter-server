@@ -1,4 +1,7 @@
 const clothes = require('../models/clothModel')
+const stripe = require('stripe')(process.env.STRIPESECRET);
+const cart = require('../models/cartModel')
+
 
 
 // add clothes
@@ -43,7 +46,7 @@ try {
     const loginUsermail = req.payload
 
 try {
-    const allCloth = await clothes.find({sellermail:{$ne:loginUsermail},clothname:{$regex:searchKey,$options:'i'}})
+    const allCloth = await clothes.find({sellermail:{$ne:loginUsermail},buyermail: { $ne: loginUsermail },clothname:{$regex:searchKey,$options:'i'}})
     res.status(200).json(allCloth)
     
 }catch(error){
@@ -75,8 +78,9 @@ exports.clothdetailsViewcontroller = async(req,res)=>{
     console.log("inside clothdetailsViewcontroller");
     // get id from req
   const {id} = req.params
+  const loginUserMail = req.payload   
   try{
-    const clothDetailsView = await clothes.find({_id:{$ne:id}})
+    const clothDetailsView = await clothes.find({_id:{$ne:id}, buyermail: { $ne: loginUserMail },sellermail: { $ne: loginUserMail }})
     res.status(200).json(clothDetailsView)
 
   }catch(error){
@@ -170,5 +174,120 @@ exports.updateClothStatusBooksController = async (req,res)=>{
     console.log(error);
     res.status(500).json(error)
     
+  }
+}
+
+// payment 
+// exports.clothPaymentController= async (req,res)=>{
+//   console.log("inside clothPaymentController");
+// // const {title,author,pages,price,discountPrice,imageURL,abstract,language,publisher,isbn,category,_id,uploadImages,sellerMail} = req.body
+// const email = req.payload
+// const {id} = req.params
+// try {
+// const clothDetails = await clothes.findById({_id:id})
+// clothDetails.status = "sold"
+// clothDetails.buyermail = email
+// await clothDetails.save()
+// const {clothname,price,clothcolor,productid,clothdetails,clothdescription,size,mainfabric,secondaryfabric,gender,category,_id,buyermail,uploadimages,} = clothDetails
+// // checkout secssion
+//   const line_items = [{
+//     price_data:{
+//       currency:'usd',
+//       product_data:{
+//         name: clothname,
+//         description:`${productid} | ${clothdetails} `,
+//         images:uploadimages,
+//         metadata:{
+//           clothname,productid,clothcolor,price,uploadimages
+//         }
+//       },
+//       unit_amount:Math.round(price*100)
+
+//     },
+//     quantity:1
+//   }]
+//   const session = await stripe.checkout.sessions.create({
+//   line_items,
+//   mode: 'payment',
+//   success_url: 'http://localhost:5173/user/payment-success',
+//   cancel_url:'http://localhost:5173/user/payment-failed',
+//   payment_method_types:["card"]
+// });
+// console.log(session);
+// res.status(200).json({checkoutURL:session.url})
+
+
+// } catch(error){
+//   console.log(error);
+//   res.status(500).json(error)
+  
+  
+// }
+// }
+
+
+
+
+exports.cartCheckoutController = async (req, res) => {
+  console.log("inside cartCheckoutController")
+
+const userEmail = req.payload
+
+  try {
+    // 1️⃣ get cart items
+const cartItems = await cart.find({ userMail: userEmail }).populate("clothId")
+
+    if (!cartItems.length) {
+  return res.status(400).json("Cart is empty")
+}
+
+
+    // 2️⃣ mark clothes as sold
+    for (let item of cartItems) {
+      await clothes.findByIdAndUpdate(
+        item.clothId._id,
+        {
+          // status: "sold",
+          buyermail: userEmail
+        }
+      )
+    }
+
+    // 3️⃣ build stripe line items
+    const line_items = cartItems.map(item => ({
+      price_data: {
+        currency: "inr",
+        product_data: {
+          name: item.clothId.clothname,
+          description: `${item.clothId.size} | ${item.clothId.clothcolor}`,
+          images: item.clothId.uploadimages?.length
+            ? item.clothId.uploadimages.map(
+                img => `http://localhost:3000/uploads/${img}`
+              )
+            : []
+        },
+        unit_amount: Math.round(item.clothId.price * 100)
+      },
+      quantity: item.quantity
+    }))
+
+    // 4️⃣ create stripe session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items,
+      success_url: "http://localhost:5173/user/payment-success",
+      cancel_url: "http://localhost:5173/user/payment-failed"
+    })
+
+    // 5️⃣ clear cart
+await cart.deleteMany({ userMail: userEmail })
+
+    // 6️⃣ send checkout url
+    res.status(200).json({ checkoutURL: session.url })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
   }
 }
