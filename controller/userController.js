@@ -226,3 +226,18 @@ exports.getAllUsersController = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+// Get total users count
+exports.getTotalUsersController = async (req, res) => {
+  console.log("inside getTotalUsersController ");
+  
+  try {
+    const totalUsers = await users.countDocuments();
+    res.status(200).json(totalUsers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error)
+    
+   
+  }
+};

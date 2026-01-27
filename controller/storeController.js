@@ -77,3 +77,31 @@ try {
     res.status(500).json(error)
 }
 }
+
+// Get total stores count
+exports.getTotalStoresController = async (req, res) => {
+  console.log("inside getTotalStoresController ");
+  
+  try {
+    const totalStores = await stores.countDocuments();
+    res.status(200).json(totalStores);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+
+// get last added 4 clothes
+exports.getLatestStoresController = async (req, res) => {
+  console.log("inside getLatestStoresController");
+
+  try {
+    const latestStores = await stores.find().sort({ createdAt: -1 }).limit(3);
+
+    res.status(200).json(latestStores);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};

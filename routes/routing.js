@@ -72,6 +72,17 @@ router.put('/cloths/:id/update',adminMiddleware,clothController.updateClothStatu
 router.get('/admin-stores/all',adminMiddleware,storeController.getAllStoreController)
 // get all user to admin page
 router.get('/admin-user/all',adminMiddleware,userController.getAllUsersController)
+// Get total users count
+router.get('/admin-user/count',adminMiddleware,userController.getTotalUsersController)
+// total clothes
+router.get('/admin-clothes/count', adminMiddleware,clothController.getTotalClothesController);
+// total stores
+router.get('/admin-stores/count', adminMiddleware,storeController.getTotalStoresController);
+// get last added 4 clothes
+router.get('/admin-clothes/latest',adminMiddleware,clothController.getLatestClothesController);
+// get last added 3 stores
+router.get('/admin-stores/latest',adminMiddleware,storeController.getLatestStoresController);
+
 
 
 module.exports = router

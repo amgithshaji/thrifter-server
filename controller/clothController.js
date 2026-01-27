@@ -291,3 +291,32 @@ await cart.deleteMany({ userMail: userEmail })
     res.status(500).json(error)
   }
 }
+
+
+// Get total clothes count
+exports.getTotalClothesController = async (req, res) => {
+  console.log("inside getTotalClothesController ");
+  
+  try {
+    const totalClothes = await clothes.countDocuments();
+    res.status(200).json(totalClothes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+
+// get last added 4 clothes
+exports.getLatestClothesController = async (req, res) => {
+  console.log("inside getLatestClothesController");
+
+  try {
+    const latestClothes = await clothes.find().sort({ createdAt: -1 }).limit(4);
+
+    res.status(200).json(latestClothes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
